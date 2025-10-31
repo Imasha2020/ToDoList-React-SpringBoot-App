@@ -1,0 +1,97 @@
+##############################
+# Java / Spring Boot (Backend)
+##############################
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+**/mvnw
+**/mvnw.cmd
+**/.mvn/
+
+# Gradle
+build/
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Logs
+*.log
+*.log.*
+
+# IDEs and editors
+.idea/
+*.iml
+.vscode/
+*.classpath
+*.project
+*.settings/
+*.factorypath
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment / Credentials
+.env
+application.properties
+application.yml
+application-*.yml
+application-*.properties
+secret.properties
+
+# Other build artifacts
+*.war
+*.jar
+
+##############################
+# React (Frontend)
+##############################
+# dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# production
+build/
+dist/
+
+# misc
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# lock files (optional)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+##############################
+# System / Misc
+##############################
+*.swp
+*.swo
+*~
+*.tmp
+*.bak
+
+##############################
+# IntelliJ + VSCode + OS cache
+##############################
+# IntelliJ
+out/
+*.ipr
+*.iws
+
+# VSCode
+.history/
+.settings/
+
+# Windows + macOS
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+.DS_Store?
+Icon?
