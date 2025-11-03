@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class UserModel {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -24,6 +24,13 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public UserModel(String username, String password,  String email, Role role) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+    }
 
     public enum Role {
         ROLE_USER,

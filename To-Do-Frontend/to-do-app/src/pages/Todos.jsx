@@ -1,44 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
 import Swal from 'sweetalert2';
+import api from "../api";
+
 
 function Todos() {
   const [todo, setTodo] = useState([]);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:8081/api/v1/auth/todos')
-      .then((response) => {
-        setTodo(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching todos:", error);
-      });
-  }, []);
-
-  const handleDelete = async (id) => {
-    const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: "This task will be permanently deleted!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!'
-    });
-
-    if (result.isConfirmed) {
-      try {
-        await axios.delete(`http://localhost:8081/api/v1/auth/todos/${id}`);
-        setTodo(todo.filter(t => t.id !== id));
-        Swal.fire('Deleted!', 'Your task has been deleted.', 'success');
-      } catch (err) {
-        console.error("Error deleting task:", err);
-        Swal.fire('Error!', 'Failed to delete task. Please try again.', 'error');
-      }
+  const fetchTodos = async () => {
+    try {
+      const response = await api.get("/todos"); 
+      setTodo(response.data);
+    } catch (error) {
+      console.error("Error fetching todos:", error);
     }
   };
+  fetchTodos();
+}, []);
+
+ const handleDelete = async (id) => {
+  const result = await Swal.fire({
+    title: 'Are you sure?',
+    text: "This task will be permanently deleted!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Yes, delete it!'
+  });
+
+  if (result.isConfirmed) {
+    try {
+      await api.delete(`/todo/${id}`);
+      setTodo(todo.filter(t => t.id !== id));
+      Swal.fire('Deleted!', 'Your task has been deleted.', 'success');
+    } catch (err) {
+      console.error("Error deleting task:", err);
+      Swal.fire('Error!', 'Failed to delete task. Please try again.', 'error');
+    }
+  }
+};
+
 
   return (
     <>

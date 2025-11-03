@@ -10,6 +10,10 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.context.SecurityContextHolder;
+import com.example.To_Do_App.model.UserModel;
+import com.example.To_Do_App.repo.UserRepo;
+
 
 import java.util.Collections;
 import java.util.List;
@@ -23,11 +27,16 @@ public class ToDoService {
     private ToDoRepo toDoRepo;
 
     @Autowired
+    private UserRepo userRepo;
+
+
+    @Autowired
     private ModelMapper modelMapper;
 
     public List<ToDoDTO> getAllToDos(){
         try{
-            List<ToDo> toDoList = toDoRepo.findAll();
+            UserModel user = getLoggedUser();
+            List<ToDo> toDoList = toDoRepo.findByUserId(user.getId());
 
             if(toDoList.isEmpty()){
                 return Collections.emptyList();
@@ -40,7 +49,7 @@ public class ToDoService {
             throw new RuntimeException("Database error occurred while fetching users", e);
         } catch (MappingException e) {
             // Catches mapping-related errors
-            throw new RuntimeException("Error occurred while mapping User to UserDTO", e);
+            throw new RuntimeException("Error occurred while mapping UserModel to UserDTO", e);
         } catch (Exception e) {
             // Catch-all for unexpected exceptions
             throw new RuntimeException("Unexpected error occurred while retrieving users", e);
@@ -54,33 +63,48 @@ public class ToDoService {
 
     }
 
+    private UserModel getLoggedUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepo.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+
     public ToDoDTO saveToDo(ToDoDTO toDoDTO){
+        UserModel user = getLoggedUser();
         ToDo toDo = modelMapper.map(toDoDTO, ToDo.class);
+        toDo.setUser(user);
         ToDo savedToDo = toDoRepo.save(toDo);
         return modelMapper.map(savedToDo, ToDoDTO.class);
     }
 
     public ToDoDTO updateToDo(long id , ToDoDTO toDoDTO){
-        Optional<ToDo> optionalToDo = toDoRepo.findById(id);
-        if(optionalToDo.isPresent()){
-            ToDo existingToDo = optionalToDo.get();
-            existingToDo.setTitle(toDoDTO.getTitle());
-            existingToDo.setDescription(toDoDTO.getDescription());
-            existingToDo.setPriority(toDoDTO.getPriority());
-            existingToDo.setDueDate(toDoDTO.getDueDate());
-            existingToDo.setStatus(toDoDTO.getStatus());
-            return modelMapper.map(existingToDo, ToDoDTO.class);
-        }else{
-            throw new RuntimeException("ToDo not found id "+id);
-        }
+        UserModel user = getLoggedUser();
+        ToDo existingToDo = toDoRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Not found"));
+
+        if(!existingToDo.getUser().getId().equals(user.getId()))
+            throw new RuntimeException("Unauthorized");
+
+        existingToDo.setTitle(toDoDTO.getTitle());
+        existingToDo.setDescription(toDoDTO.getDescription());
+        existingToDo.setPriority(toDoDTO.getPriority());
+        existingToDo.setDueDate(toDoDTO.getDueDate());
+        existingToDo.setStatus(toDoDTO.getStatus());
+
+        return modelMapper.map(existingToDo, ToDoDTO.class);
     }
 
+
     public String deleteToDo(long id){
-        if(toDoRepo.existsById(id)){
-            toDoRepo.deleteById(id);
-            return "Todo deleted successfully";
-        }else {
-            return "Todo not found with id:" + id;
-        }
+        UserModel user = getLoggedUser();
+        ToDo existingToDo = toDoRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("NOT FOUND"));
+
+        if(!existingToDo.getUser().getId().equals(user.getId()))
+            throw new RuntimeException("Unauthorized");
+
+        toDoRepo.delete(existingToDo);
+        return "Todo deleted successfully";
     }
+
 }

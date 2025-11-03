@@ -14,10 +14,10 @@ function Createtodos() {
 
      const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:8081/api/v1/auth/todos', { title, description, priority, status, dueDate })
+        axios.post('/todos', { title, description, priority, status, dueDate })
             .then((response) => {
                 console.log("Task created:", response.data);
-                navigate('/Todos');
+                navigate('/todos');
             })
             .catch((error) => {
                 console.error("Error creating task:", error);

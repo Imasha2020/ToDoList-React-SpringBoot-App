@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin("http://localhost:5173")
-@RequestMapping(value = "api/v1/auth")
+@RequestMapping(value = "api/v1")
 
 public class ToDoController {
     @Autowired
@@ -19,6 +19,7 @@ public class ToDoController {
     private List<ToDoDTO> getToDos(){
         return toDoService.getAllToDos();
     }
+
     @GetMapping("/todos/{id}")
     public ToDoDTO getToDo(@PathVariable long id){
         return toDoService.getTodo(id);

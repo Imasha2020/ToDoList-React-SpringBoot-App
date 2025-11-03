@@ -24,4 +24,6 @@ public class ToDoDTO {
 
     private ToDo.Status status;
 
+    private Long userId; // reference to the owner
+
 }

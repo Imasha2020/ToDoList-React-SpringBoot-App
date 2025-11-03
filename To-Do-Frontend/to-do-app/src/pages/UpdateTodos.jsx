@@ -17,7 +17,7 @@ function UpdateTodos() {
 
   // Fetch existing data
   useEffect(() => {
-    axios.get(`http://localhost:8081/api/v1/auth/todos/${id}`)
+    axios.get(`/todos/${id}`)
       .then((response) => {
         setFormData(response.data);
       })
@@ -35,7 +35,7 @@ function UpdateTodos() {
    // Handle update
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.put(`http://localhost:8081/api/v1/auth/todos/${id}`, formData)
+    axios.put(`/todos/${id}`, formData)
       .then(() => {
         alert("To-Do Updated Successfully!");
         navigate('/todos'); // redirect to todo list
