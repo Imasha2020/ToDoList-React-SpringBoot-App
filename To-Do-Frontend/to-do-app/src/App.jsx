@@ -7,11 +7,15 @@ import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import AdminDashboard from './pages/AdminDashboard.jsx'
 import ProtectedRoute from './pages/ProtectedRoute.jsx'
+import Navbar from './Components/Navbar.jsx'
 
 function App() {
+  const token = localStorage.getItem("token");
   return (
     <div>
       <BrowserRouter>
+      {/* Show Navbar only if logged in */}
+      {token && <Navbar />}
         <Routes>
           <Route path="/login" element={<Login />} />
   <Route path="/register" element={<Register />} />
