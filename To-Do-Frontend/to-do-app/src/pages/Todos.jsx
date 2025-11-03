@@ -33,7 +33,7 @@ function Todos() {
 
   if (result.isConfirmed) {
     try {
-      await api.delete(`/todo/${id}`);
+      await api.delete(`/todos/${id}`);
       setTodo(todo.filter(t => t.id !== id));
       Swal.fire('Deleted!', 'Your task has been deleted.', 'success');
     } catch (err) {

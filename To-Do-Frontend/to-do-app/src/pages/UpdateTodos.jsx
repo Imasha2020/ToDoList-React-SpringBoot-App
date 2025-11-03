@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from "../api"
 
 function UpdateTodos() {
 
@@ -16,14 +16,18 @@ function UpdateTodos() {
   });
 
   // Fetch existing data
-  useEffect(() => {
-    axios.get(`/todos/${id}`)
-      .then((response) => {
+ useEffect(() => {
+    // Define an async function inside useEffect
+    const fetchTodo = async () => {
+      try {
+        const response = await api.get(`/todos/${id}`);
         setFormData(response.data);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching ToDo:", error);
-      });
+      }
+    };
+
+    fetchTodo(); // call the async function
   }, [id]);
 
   // Handle input changes
@@ -33,9 +37,9 @@ function UpdateTodos() {
   };
 
    // Handle update
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    axios.put(`/todos/${id}`, formData)
+    await api.put(`/todos/${id}`, formData)
       .then(() => {
         alert("To-Do Updated Successfully!");
         navigate('/todos'); // redirect to todo list

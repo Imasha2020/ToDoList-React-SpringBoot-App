@@ -1,6 +1,7 @@
 import React , {useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
+import api from "../api"
 
 
 function Createtodos() {
@@ -12,9 +13,9 @@ function Createtodos() {
     const [dueDate, setDueDate] = useState('');
     const navigate = useNavigate();
 
-     const handleSubmit = (e) => {
+     const handleSubmit = async (e) => {
         e.preventDefault();
-        axios.post('/todos', { title, description, priority, status, dueDate })
+        await api.post('/todos', { title, description, priority, status, dueDate })
             .then((response) => {
                 console.log("Task created:", response.data);
                 navigate('/todos');
