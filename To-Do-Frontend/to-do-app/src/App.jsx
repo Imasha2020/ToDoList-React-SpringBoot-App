@@ -16,6 +16,7 @@ function App() {
       <BrowserRouter>
       {/* Show Navbar only if logged in */}
       {token && <Navbar />}
+  
         <Routes>
           <Route path="/login" element={<Login />} />
   <Route path="/register" element={<Register />} />
@@ -36,6 +37,7 @@ function App() {
     <ProtectedRoute role="ADMIN"><AdminDashboard/></ProtectedRoute>
   }/>
         </Routes>
+    
       </BrowserRouter>
     </div>
   )
