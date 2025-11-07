@@ -33,8 +33,8 @@ function App() {
     <ProtectedRoute role="ROLE_USER"><UpdateTodo/></ProtectedRoute>
   }/>
 
-  <Route path="/admin" element={
-    <ProtectedRoute role="ADMIN"><AdminDashboard/></ProtectedRoute>
+  <Route path="/admin-dashboard" element={
+    <ProtectedRoute role="ROLE_ADMIN"><AdminDashboard/></ProtectedRoute>
   }/>
         </Routes>
     

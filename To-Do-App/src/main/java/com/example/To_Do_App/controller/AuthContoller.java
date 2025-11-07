@@ -1,5 +1,6 @@
 package com.example.To_Do_App.controller;
 
+import com.example.To_Do_App.dto.AuthResponse;
 import com.example.To_Do_App.model.UserModel;
 import com.example.To_Do_App.repo.UserRepo;
 import com.example.To_Do_App.service.AuthService;
@@ -10,9 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -41,7 +40,7 @@ public class AuthContoller {
     }
 
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody UserModel data){
+    public AuthResponse login(@RequestBody UserModel data){
         UserModel user = userRepo.findByUsername(data.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -49,11 +48,9 @@ public class AuthContoller {
             throw new RuntimeException("Invalid password");
         }
 
-        String token = jwtService.generateToken(user.getUsername());
-        Map<String,String> resp = new HashMap<>();
-        resp.put("token", token);
-        resp.put("role", String.valueOf(user.getRole()));   // e.g. "ADMIN" or "USER"
-        return resp;
+        String token = jwtService.generateToken(user.getUsername(), user.getRole().name());
+
+        return new AuthResponse(token, user.getUsername(), user.getRole().name());
     }
 
 }

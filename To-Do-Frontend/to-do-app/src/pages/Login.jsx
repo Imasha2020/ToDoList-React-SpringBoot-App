@@ -27,7 +27,11 @@ function Login() {
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
-      navigate("/todos");
+      if(res.data.role === "ROLE_ADMIN"){
+    navigate("/admin-dashboard");
+    }else{
+        navigate("/todos");
+    }
     } catch (err) {
       console.log("ERR =>", err);
       console.log("ERR Response =>", err.response);

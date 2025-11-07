@@ -36,10 +36,26 @@ public class JWTService {
         }
     }
 
-    public String generateToken(String username) {
+    public String getRole(String token){
+        try{
+            return Jwts
+                    .parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .get("role", String.class);
+        }catch (Exception e){
+            return null;
+        }
+    }
+
+
+    public String generateToken(String username , String role) {
         try{
             return Jwts.builder()
                     .subject(username)
+                    .claim("role", role)
                     .issuedAt(new Date(System.currentTimeMillis()))
                     .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 15))
                     .signWith(secretKey)
